@@ -165,6 +165,7 @@ function Build() {
         h('li', {}, 'Snippet: `safeGet(STORAGE, storageStatus)` catches `SecurityError`, switches the visible boundary to memory mode, and never clears existing browser storage.'),
         h('li', {}, 'Problem fixed during build: server-rendered JSON inside a script tag is HTML-escaped by the renderer, so the client decodes entities before `JSON.parse`.'),
         h('li', {}, 'Routing: `src/content.mjs` generates guide routes and aliases; `scripts/build.mjs` writes `path/index.html`.'),
+        h('li', {}, 'Vura: `dist/manifest.json` is validated with the public manifest contract and maps each route to `config.staticKey` in `dist/static`.'),
         h('li', {}, 'Lesson: server pages use `h()` and `renderToString`; browser JSX stays in the client entry.'),
         h('li', {}, 'Lesson: `mount()` is client-mounted interactivity over static fallback HTML, not SSR-preserving hydration.'),
         h('li', {}, 'Limitation: fictional local-only planning; no bookings, accounts, live maps or analytics.'),

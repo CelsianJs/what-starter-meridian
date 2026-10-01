@@ -7,7 +7,8 @@ Last verified: 2026-10-01.
 - `src/content.mjs` owns guide, route and starter metadata.
 - `src/server/render.mjs` renders every public route with `what-framework/server`, including guide aliases and root `404.html`.
 - `src/client/main.jsx` mounts the planner island on `/planner`; browser JSX is not imported by the Node renderer.
-- `scripts/build.mjs` validates `SITE_URL`, writes static HTML, sitemap, robots and `dist/manifest.json`.
+- `scripts/build.mjs` validates `SITE_URL` and writes static HTML, sitemap and robots output under `dist/static`.
+- `scripts/check.mjs` validates the emitted Vura route manifest with `@celsian/vura-contract`.
 - `scripts/serve-static.mjs` previews `dist/static` and returns real HTTP 404 for unknown paths.
 
 ## What Framework patterns
@@ -25,6 +26,7 @@ Last verified: 2026-10-01.
 - Server-rendered JSON inside a `<script type="application/json">` is escaped by the renderer. The client decodes entities before `JSON.parse`; otherwise the planner mounts with an empty itinerary.
 - The static planner fallback is intentionally useful prose/route context, then `src/client/main.jsx` replaces only the planner island. Server guide pages remain readable without JavaScript.
 - The reorder UI uses buttons rather than drag-only gestures so it works with keyboard and touch.
+- Vura upload rejected the first handwritten static manifest because it lacked required `timestamp` and `pages[].filePath` fields. The starter now emits the full manifest contract and maps each route to its promoted public file via `config.staticKey`.
 - Trip data is fictional and local-only; there is no account sync, booking, live map, weather or analytics service.
 
 ## Reference snippets

@@ -40,7 +40,7 @@
 - Imagery/iconography: CSS/SVG route lines, compass roses, tide marks; no external assets.
 
 ## Components
-- Existing components to reuse: What signals/computed/effects, server `h()` renderer, Vura static manifest scripts from sibling starters.
+- Existing components to reuse: What signals/computed/effects, server `h()` renderer, Vura static artifact scripts from sibling starters.
 - New/changed components: Guide card, itinerary day stack, move controls, timezone display, export panel, build journal.
 - Variants and states: Empty saved plan, corrupt plan recovery, denied storage warning, selected timezone, export-ready state.
 - Token/component ownership: CSS variables in `src/styles.css`; route data in `src/content.mjs`; client state in `src/client/main.jsx`.

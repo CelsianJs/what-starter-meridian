@@ -14,6 +14,7 @@
     "what-framework": "0.13.10"
   },
   "devDependencies": {
+    "@celsian/vura-contract": "0.8.2",
     "@vitejs/plugin-basic-ssl": "2.1.0",
     "vite": "6.4.3",
     "playwright": "1.57.0",

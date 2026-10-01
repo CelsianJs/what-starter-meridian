@@ -1,6 +1,7 @@
-import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync, copyFileSync, readdirSync } from 'node:fs';
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync, copyFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { renderRoute, publicRoutes } from '../src/server/render.mjs';
+import { writeCanonicalVuraManifest } from './vura-static-check.mjs';
 
 const siteUrl = resolveSiteUrl();
 const staticRoot = 'dist/static';
@@ -23,13 +24,7 @@ for (const route of routes) {
 copyFileSync(join(staticRoot, '404', 'index.html'), join(staticRoot, '404.html'));
 writeFileSync(join(staticRoot, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${siteUrl}/sitemap.xml\n`);
 writeFileSync(join(staticRoot, 'sitemap.xml'), sitemap(routes, siteUrl));
-writeFileSync('dist/manifest.json', JSON.stringify({
-  version: 1,
-  type: 'static',
-  routes: routes.filter((route) => route !== '/404'),
-  notFoundPage: '404.html',
-  assets: readdirSync(join(staticRoot, 'assets')).map((file) => `assets/${file}`),
-}, null, 2));
+writeCanonicalVuraManifest(routes);
 
 function writeFile(file, text) {
   const target = join(staticRoot, file);
