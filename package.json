@@ -1,0 +1,22 @@
+{
+  "name": "what-starter-meridian",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "node scripts/clean.mjs && vite build --config vite.client.config.js && node scripts/build.mjs && node scripts/check.mjs",
+    "test": "npm run build && node scripts/smoke.mjs",
+    "preview": "node scripts/serve-static.mjs"
+  },
+  "dependencies": {
+    "what-compiler": "0.13.10",
+    "what-framework": "0.13.10"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "2.1.0",
+    "vite": "6.4.3",
+    "playwright": "1.57.0",
+    "vura-platform": "0.3.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "static": {
+    "directory": "dist/static",
+    "manifest": "dist/manifest.json"
+  },
+  "headers": [
+    { "source": "/assets/(.*)", "headers": [{ "key": "cache-control", "value": "public, max-age=31536000, immutable" }] },
+    { "source": "/(.*)", "headers": [{ "key": "cache-control", "value": "public, max-age=300" }] }
+  ]
+}
