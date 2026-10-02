@@ -91,7 +91,7 @@ function Guides() {
         h('p', { class: 'eyeline' }, 'Fictional guide index'),
         h('h1', {}, 'Three harbors, many ways through.'),
       ),
-      h('p', {}, 'Every guide page is rendered at build time and can be opened directly from a static host. Alias routes like `/bay` are generated from the same content records.'),
+      h('p', {}, 'Pick a route that fits your pace, read the stop-by-stop notes, and open the planner to arrange each day.'),
     ),
     GuideGrid(),
   );
