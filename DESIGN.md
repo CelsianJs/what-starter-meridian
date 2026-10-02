@@ -37,7 +37,7 @@
 - Spacing/layout rhythm: Broad ledger grids, route strips, inset panels, shoreline-like rules.
 - Shape/radius/elevation: Low radius, hairline borders, paper shadows, no glossy cards.
 - Motion: Subtle current-like fades and focus transitions; reduced-motion disables transforms.
-- Imagery/iconography: CSS/SVG route lines, compass roses, tide marks; no external assets.
+- Imagery/iconography: data-backed inline SVG route lines, compass roses, tide marks; no external assets.
 
 ## Components
 - Existing components to reuse: What signals/computed/effects, server `h()` renderer, Vura static artifact scripts from sibling starters.
@@ -84,3 +84,8 @@
 - Replace the oversized serif hero posture with a denser chart-table lead: a compact headline, route ledger and itinerary preview should carry the first screen.
 - Surface the planner as a usable object above the fold instead of making visitors click through a poster-like intro.
 - Keep the blue-paper cartographic identity, but reduce empty hero scale and make guide/planner information feel operational.
+
+## Refinement notes — 2026-10-02 Opus review
+- Planner controls now opt out of grid stretch and stay compact/sticky at the top of the itinerary.
+- The no-JS route explanation remains available as static fallback, but it is hidden when the planner island mounts so product screens do not show framework implementation copy.
+- Day headings and stop time columns were tightened, and the decorative guide chart became a lightweight SVG route visualization from existing stops.

@@ -72,6 +72,7 @@ function Home() {
       ),
       h('div', { class: 'panel route-ledger', 'aria-label': 'Sample coastal itinerary' },
         h('p', { class: 'eyeline' }, 'Sample route'),
+        RouteMap(sampleStops.slice(0, 5), 'home route map'),
         ...sampleStops.slice(0, 4).map((stop) => h('div', { class: 'ledger-row' },
           h('span', {}, `D${stop.day}`),
           h('strong', {}, stop.time),
@@ -111,9 +112,10 @@ function GuideGrid() {
 }
 
 function GuideDetail(guide) {
+  const guideStops = sampleStops.filter((stop) => stop.guide === guide.slug);
   return h('div', { class: 'shell detail' },
     h('aside', { class: 'panel chart', style: `--guide:${guide.color}` },
-      h('div', { class: 'route-line' }),
+      RouteMap(guideStops.length ? guideStops : sampleStops, `${guide.title} route map`),
     ),
     h('article', {},
       h('p', { class: 'eyeline' }, guide.region),
@@ -138,8 +140,9 @@ function Planner() {
         h('p', {}, 'The planner is the lead object here: keyboard-safe move controls, local state, timezone preview and portable JSON export are all visible before the guide catalogue.'),
       ),
       h('div', { class: 'panel route-ledger' },
-        h('p', { class: 'eyeline' }, 'Above-fold fallback'),
-        h('p', {}, 'If JavaScript is unavailable, this route ledger still explains the trip shape. JavaScript replaces the planner region below with editable state.'),
+        h('p', { class: 'eyeline' }, 'Route preview'),
+        RouteMap(sampleStops, 'Sample route preview'),
+        h('p', { class: 'fallback-note' }, 'No JavaScript? The static route preview and guide links still describe the sample trip.'),
       ),
     ),
     h('section', { id: 'planner-island', class: 'planner' },
@@ -164,6 +167,8 @@ function Build() {
         h('li', {}, 'Effects: the current plan persists through safe storage wrappers and cleans up after itself.'),
         h('li', {}, 'Snippet: `safeGet(STORAGE, storageStatus)` catches `SecurityError`, switches the visible boundary to memory mode, and never clears existing browser storage.'),
         h('li', {}, 'Problem fixed during build: server-rendered JSON inside a script tag is HTML-escaped by the renderer, so the client decodes entities before `JSON.parse`.'),
+        h('li', {}, 'Problem fixed during refinement: planner controls must opt out of grid stretch with `align-self:start` and `align-content:start`, or the buttons become giant pills.'),
+        h('li', {}, 'Refinement: the guide chart is a real inline SVG route map derived from sample stops instead of decorative CSS dots.'),
         h('li', {}, 'Routing: `src/content.mjs` generates guide routes and aliases; `scripts/build.mjs` writes `path/index.html`.'),
         h('li', {}, 'Vura: `dist/manifest.json` is validated with the public manifest contract and maps each route to `config.staticKey` in `dist/static`.'),
         h('li', {}, 'Lesson: server pages use `h()` and `renderToString`; browser JSX stays in the client entry.'),
@@ -184,4 +189,24 @@ function NotFound() {
       h('a', { class: 'button', href: '/guides' }, 'View guides'),
     ),
   );
+}
+
+function RouteMap(stops, label) {
+  const points = stops.map((stop, index) => {
+    const x = 22 + index * (156 / Math.max(1, stops.length - 1));
+    const y = 94 - ((Number(stop.day) || 1) - 1) * 24 + (index % 2) * 10;
+    return { x, y, stop };
+  });
+  return h('svg', { class: 'route-map', viewBox: '0 0 200 120', role: 'img', 'aria-label': label },
+    h('polyline', { points: points.map((point) => `${point.x},${point.y}`).join(' '), fill: 'none', stroke: 'currentColor', 'stroke-width': '3', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }),
+    ...points.map((point, index) => h('g', {},
+      h('circle', { cx: String(point.x), cy: String(point.y), r: '6', fill: guideColor(point.stop.guide) }),
+      h('text', { x: String(point.x), y: String(point.y - 12), 'text-anchor': 'middle' }, `D${point.stop.day}`),
+      index === 0 ? h('text', { x: String(point.x), y: String(point.y + 24), 'text-anchor': 'middle' }, 'start') : null,
+    )),
+  );
+}
+
+function guideColor(slug) {
+  return guides.find((guide) => guide.slug === slug)?.color || '#1f6f92';
 }

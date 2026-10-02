@@ -159,4 +159,7 @@ function decodeEntities(value) {
 }
 
 const host = document.querySelector('#planner-island');
-if (host) mount(<PlannerIsland />, host);
+if (host) {
+  document.documentElement.classList.add('js-ready');
+  mount(<PlannerIsland />, host);
+}

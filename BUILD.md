@@ -25,7 +25,10 @@ Last verified: 2026-10-01.
 - Storage APIs can throw in private or locked-down contexts, so reads/writes use safe wrappers and a tab-local memory fallback instead of clearing user data.
 - Server-rendered JSON inside a `<script type="application/json">` is escaped by the renderer. The client decodes entities before `JSON.parse`; otherwise the planner mounts with an empty itinerary.
 - The static planner fallback is intentionally useful prose/route context, then `src/client/main.jsx` replaces only the planner island. Server guide pages remain readable without JavaScript.
+- Refinement: the route fallback remains available without JavaScript, but `src/client/main.jsx` adds `.js-ready` so implementation copy is hidden once the interactive planner is mounted.
 - The reorder UI uses buttons rather than drag-only gestures so it works with keyboard and touch.
+- Refinement: `.controls` opts out of grid stretch with `align-self:start` and `align-content:start`, keeping export/reset controls compact beside tall itineraries.
+- Refinement: route charts are inline SVG generated from `sampleStops`, not decorative CSS dots, so the guide visual is tied to the same data as the planner.
 - Vura upload rejected the first handwritten static manifest because it lacked required `timestamp` and `pages[].filePath` fields. The starter now emits the full manifest contract and maps each route to its promoted public file via `config.staticKey`.
 - Trip data is fictional and local-only; there is no account sync, booking, live map, weather or analytics service.
 
