@@ -1,7 +1,7 @@
 export const site = {
   name: 'Meridian',
   tagline: 'Coastal trips planned like charts, not feeds.',
-  description: 'A fictional travel planner starter with static guide pages and a local-only itinerary island.',
+  description: 'A fictional coastal travel planner with guide pages and a browser-local itinerary.',
   repo: 'https://github.com/CelsianJs/what-starter-meridian',
   expectedUrl: 'https://what-starter-meridian-fae244da.vura.app',
 };
