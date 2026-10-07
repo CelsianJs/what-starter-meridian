@@ -1,6 +1,12 @@
 # Build journal
 
-Last verified: 2026-10-01.
+## Product-depth patterns — 2026-10-07
+
+`planForGuide(slug)` and `moveStop(items, index, delta)` are pure functions in `src/content.mjs`. Previously, reordering retained activity timestamps while hard-coding day reassignment, which could place 13:10 before 09:40. The corrected swap retains destination slot `day` and `time`: `{ ...items[target], day: items[index].day, time: items[index].time }`. The query parameter selects only a known guide. Existing saved plans win on initial load, and an explicit route button replaces them. The mounted SVG projects current stops through reactive accessors; the static sample chart remains only as a no-JS fallback. Timezone output is labeled as a fixed reference instant, not conversion of undated stop slots. Tests cover each guide plan, slot stability, exported guide ids and storage failure.
+
+Verification: `npm test` runs content/model regressions, production artifact checks, contextual browser flows, desktop/mobile screenshots and the original smoke suite. Screenshot proof is under `.screenshots/`; no external services are required.
+
+Last verified: 2026-10-07.
 
 ## Architecture
 
