@@ -1,8 +1,12 @@
 # Design
 
+## Product-depth refinement — 2026-10-07
+
+Each guide now includes practical, explicitly fictional pace/access notes and a guide-derived local route. Selected guide context is carried by `?guide=slug`, but saved work is not replaced until the visitor explicitly applies that route. Reorder swaps activities between fixed day/time slots; chart/export read the same stop state. Guide context leads on mobile; no-JS pages retain a readable sample itinerary.
+
 ## Source of truth
 - Status: Active
-- Last refreshed: 2026-10-01
+- Last refreshed: 2026-10-07
 - Primary product surfaces: Coastal travel guide index, guide detail pages, itinerary planner, build journal, not-found page.
 - Evidence reviewed: Starter brief; existing What starter static-render pattern from sibling starters; local What/Vura package constraints.
 

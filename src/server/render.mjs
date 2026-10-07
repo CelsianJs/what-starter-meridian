@@ -67,7 +67,7 @@ function Home() {
       h('div', {},
         h('p', { class: 'eyeline' }, 'Blue-paper travel planning'),
         h('h1', {}, 'Chart a three-day coast.'),
-        h('p', {}, site.description),
+        h('p', {}, 'Ferry arrivals, cedar paths and quiet harbor rooms: explore a fictional coast, then arrange a route that fits your pace.'),
         h('a', { class: 'button', href: '/planner' }, 'Open planner'),
       ),
       h('div', { class: 'panel route-ledger', 'aria-label': 'Sample coastal itinerary' },
@@ -124,9 +124,11 @@ function GuideDetail(guide) {
       h('p', { class: 'meta' }, `${guide.timezone} · ${guide.tide}`),
       h('h2', {}, 'Suggested legs'),
       h('ul', { class: 'note-list' }, ...guide.legs.map((leg) => h('li', {}, leg))),
+      h('h2', {}, 'Pace and access'),
+      ...guide.logistics.map((leg) => h('section', {}, h('h3', {}, leg.title), h('p', { class: 'meta' }, `Suggested local slot · ${leg.time}`), h('p', {}, leg.note))),
       h('h2', {}, 'Field notes'),
       h('ul', { class: 'note-list' }, ...guide.notes.map((note) => h('li', {}, note))),
-      h('a', { class: 'button', href: '/planner' }, 'Use in planner'),
+      h('a', { class: 'button', href: `/planner?guide=${guide.slug}` }, 'Use in planner'),
     ),
   );
 }
@@ -137,7 +139,7 @@ function Planner() {
       h('div', {},
         h('p', { class: 'eyeline' }, 'Browser-local itinerary'),
         h('h1', {}, 'Move a stop. Export the route.'),
-        h('p', {}, 'Reorder stops with the arrows or keyboard, preview local times, and export the trip as portable JSON before comparing more guide options.'),
+        h('p', {}, 'Move activities between fixed day/time slots, compare a timezone reference, and export the local trip as portable JSON. Guide selections never silently replace saved work.'),
       ),
       h('div', { class: 'panel route-ledger' },
         h('p', { class: 'eyeline' }, 'Route preview'),
@@ -146,7 +148,7 @@ function Planner() {
       ),
     ),
     h('section', { id: 'planner-island', class: 'planner' },
-      h('div', { class: 'panel' }, h('p', {}, 'Planner loading… If JavaScript is unavailable, the guide pages remain fully readable.')),
+      h('div', { class: 'panel' }, h('p', {}, 'Enable JavaScript to reorder or export. This sample route remains readable:'), h('ol', {}, ...sampleStops.map(stop => h('li', {}, `Day ${stop.day} · ${stop.time} · `, h('a', { href: `/guides/${stop.guide}` }, stop.title))))),
     ),
   );
 }
@@ -162,7 +164,7 @@ function Build() {
     ),
     h('section', { class: 'build-card' },
       h('ul', { class: 'build-list' },
-        h('li', {}, 'Signals: `src/client/main.jsx` stores stops, timezone, export status and storage mode.'),
+        h('li', {}, h('code', {}, 'moveStop(items, index, delta)'), ' swaps activity identity while retaining schedule-slot day/time. The prior swap could put afternoon timestamps before morning slots.'), h('li', {}, h('code', {}, 'planForGuide(slug)'), ' derives a guide route. Query context does not replace saved work without an explicit choice.'), h('li', {}, 'The mounted SVG and exported JSON read current stops; the no-JS page keeps the sample route. The timezone control compares a fixed reference instant, not undated stop conversions.'), h('li', {}, 'Signals: `src/client/main.jsx` stores stops, timezone, export status and storage mode.'),
         h('li', {}, 'Computed: day groups and local-time preview derive from the current stop list and timezone.'),
         h('li', {}, 'Effects: the current plan persists through safe storage wrappers and cleans up after itself.'),
         h('li', {}, 'Snippet: `safeGet(STORAGE, storageStatus)` catches `SecurityError`, switches the visible boundary to memory mode, and never clears existing browser storage.'),

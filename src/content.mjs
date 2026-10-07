@@ -67,3 +67,39 @@ export const routes = [
   ]),
   { path: '/404', title: 'Not found' },
 ];
+
+const legDetails = {
+  'cormorant-bay': [
+    ['North quay arrival', '11:00', 'Allow 45 minutes from the ferry ramp to the harbor rooms. The quay has step-free access; use the covered eastern path if the wind turns.'],
+    ['Fogbell cedar walk', '14:00', 'A 2-hour out-and-back on uneven roots. Carry water and a wind shell; the sheltered loop is the shorter alternative.'],
+    ['Lamp room supper', '18:30', 'Leave 30 minutes to return through the old quay. This sample stop is a meal break, not a reservation or restaurant listing.'],
+  ],
+  'saltline-reach': [
+    ['Basalt pool survey', '09:00', 'Spend 90 minutes along the marked shore path. Stay above the wet rock line; the pools are a viewing stop, not a swimming recommendation.'],
+    ['Lantern trail', '13:00', 'Allow 3 hours for the ridge loop and carry lunch. Turn back at the lower beacon if visibility falls; there is no staffed shelter in this fictional route.'],
+    ['North beach smokehouse', '18:00', 'A 45-minute sheltered walk from the harbor. Keep transfer time flexible and check real services before adapting this sample into a trip.'],
+  ],
+  'blueglass-canal': [
+    ['Tile quay loop', '10:00', 'A 75-minute level route along the canal edge. Use the permanent road bridge rather than relying on the seasonal footbridge.'],
+    ['Archive pier', '14:00', 'Plan a 2-hour indoor stop and a 20-minute walk from the quay. The fictional archive illustrates a reservation-dependent leg; verify access in a real itinerary.'],
+    ['Custard market', '17:00', 'Allow an hour for the market loop. Keep an unstructured meal break afterward instead of stacking another transfer onto the last day.'],
+  ],
+};
+for (const guide of guides) {
+  guide.logistics = legDetails[guide.slug].map(([title, time, note]) => ({ title, time, note }));
+}
+
+export function planForGuide(slug) {
+  const guide = guides.find(item => item.slug === slug);
+  return guide ? guide.logistics.map((leg, index) => ({ id: `${slug}-${index}`, day: Math.min(guide.days, index + 1), time: leg.time, title: leg.title, place: guide.region, guide: slug })) : [];
+}
+
+// Schedule slots own day/time; moving an activity does not reorder the clock.
+export function moveStop(items, index, delta) {
+  const target = index + delta;
+  if (target < 0 || target >= items.length) return items;
+  const next = [...items];
+  next[index] = { ...items[target], day: items[index].day, time: items[index].time };
+  next[target] = { ...items[index], day: items[target].day, time: items[target].time };
+  return next;
+}

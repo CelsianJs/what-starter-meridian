@@ -1,4 +1,5 @@
 import { mount, useComputed, useEffect, useSignal } from 'what-framework';
+import { planForGuide, moveStop } from '../content.mjs';
 
 const STORAGE = 'meridian-plan';
 const data = safeJson(decodeEntities(document.querySelector('#meridian-data')?.textContent || '')) || { sampleStops: [], guides: [] };
@@ -7,8 +8,10 @@ const fallback = new Map();
 function PlannerIsland() {
   const storageStatus = useSignal('persistent');
   const saved = normalizePlan(safeJson(safeGet(STORAGE, storageStatus)));
-  const stops = useSignal(saved.length ? saved : data.sampleStops);
-  const zone = useSignal(safeGet('meridian-zone', storageStatus) || 'America/Halifax');
+  const selected = data.guides.find(guide => guide.slug === new URLSearchParams(location.search).get('guide'));
+  const guidePlan = selected ? planForGuide(selected.slug) : [];
+  const stops = useSignal(saved.length ? saved : guidePlan.length ? guidePlan : data.sampleStops);
+  const zone = useSignal(safeGet('meridian-zone', storageStatus) || selected?.timezone || 'America/Halifax');
   const exportText = useSignal('');
 
   const days = useComputed(() => groupByDay(stops()));
@@ -20,11 +23,8 @@ function PlannerIsland() {
   });
 
   function move(index, delta) {
-    const next = [...stops()];
-    const target = index + delta;
-    if (target < 0 || target >= next.length) return;
-    [next[index], next[target]] = [next[target], next[index]];
-    stops(next.map((stop, order) => ({ ...stop, day: order < 2 ? 1 : order < 4 ? 2 : 3 })));
+    stops(moveStop(stops(), index, delta));
+    exportText('');
   }
 
   function reset() {
@@ -46,15 +46,17 @@ function PlannerIsland() {
     <>
       <aside class="panel controls">
         <p class="eyeline">Trip controls</p>
+        {selected ? <div><p>{selected.title} route selected. Existing saved stops are kept until you choose this route.</p><button type="button" onClick={() => { stops(guidePlan); exportText(''); }}>Use {selected.title} route</button></div> : null}
+        <p>Move activities between fixed day/time slots. Times stay in schedule order.</p>
         <label>
-          Timezone display
-          <select value={zone} onInput={(event) => zone(event.target.value)}>
+          Timezone reference
+          <select value={zone} onInput={(event) => { zone(event.target.value); exportText(''); }}>
             {['America/Halifax', 'Atlantic/Reykjavik', 'Europe/Lisbon', 'America/New_York'].map((tz) => (
               <option value={tz}>{tz}</option>
             ))}
           </select>
         </label>
-        <p aria-live="polite">Local preview: {() => localPreview()}</p>
+        <p aria-live="polite">Reference instant (18 Jun 2026, 14:30 UTC): {() => localPreview()}. Stop slots remain destination-local times.</p>
         <button type="button" onClick={exportPlan}>Export JSON</button>
         <button type="button" onClick={reset}>Reset sample route</button>
         <p class="storage-note" hidden={() => storageStatus() === 'persistent'}>Storage is unavailable or blocked here. This tab keeps an in-memory plan, but it will not sync or survive a closed tab.</p>
@@ -64,10 +66,14 @@ function PlannerIsland() {
         </div>
       </aside>
       <section aria-label="Itinerary stops">
+        <div class="panel route-ledger"><p class="eyeline">Current route · schedule order</p><svg class="route-map" viewBox="0 0 200 120" role="img" aria-label="Current itinerary route">
+          <polyline points={() => stops().map((stop,index) => `${22+index*156/Math.max(1,stops().length-1)},${94-(stop.day-1)*24+(index%2)*10}`).join(' ')} fill="none" stroke="currentColor" stroke-width="3" />
+          {() => stops().map((stop,index) => <g><circle cx={22+index*156/Math.max(1,stops().length-1)} cy={94-(stop.day-1)*24+(index%2)*10} r="6" fill={data.guides.find(guide => guide.slug===stop.guide)?.color || '#1f6f92'} /><text x={22+index*156/Math.max(1,stops().length-1)} y={82-(stop.day-1)*24+(index%2)*10} text-anchor="middle">D{stop.day}</text></g>)}
+        </svg></div>
         {() => days().map(([day, dayStops]) => (
           <article class="day-card">
             <p class="meta">Day {day}</p>
-            <h2>{day === 1 ? 'Harbor arrival' : day === 2 ? 'Across the inner cut' : 'Outer shoal watch'}</h2>
+            <h2>Day {day} route</h2>
             {dayStops.map(({ stop, index }) => (
               <div class="stop">
                 <span class="meta">{stop.time}</span>
