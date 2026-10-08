@@ -34,6 +34,7 @@ export function publicRoutes() {
 
 function Layout({ path, title, description, origin, body }) {
   const canonical = new URL(path === '/404' ? '/404' : path, origin).toString();
+  const guideContext = path === '/guides' || guides.some(guide => path === `/guides/${guide.slug}` || path === guide.alias);
   const asset = '/assets/main.js';
   return h('html', { lang: 'en' },
     h('head', {},
@@ -49,9 +50,9 @@ function Layout({ path, title, description, origin, body }) {
       h('header', { class: 'shell mast' },
         h('a', { class: 'brand', href: '/' }, site.name),
         h('nav', { class: 'nav', 'aria-label': 'Primary' },
-          h('a', { href: '/guides' }, 'Guides'),
-          h('a', { href: '/planner' }, 'Planner'),
-          h('a', { href: '/build' }, 'Build'),
+          h('a', { href: '/guides', 'aria-current': guideContext ? path === '/guides' ? 'page' : 'location' : undefined }, 'Guides'),
+          h('a', { href: '/planner', 'aria-current': path === '/planner' ? 'page' : undefined }, 'Planner'),
+          h('a', { href: '/build', 'aria-current': path === '/build' ? 'page' : undefined }, 'Build'),
         ),
       ),
       h('main', {}, body),
@@ -195,11 +196,11 @@ function NotFound() {
 
 function RouteMap(stops, label) {
   const points = stops.map((stop, index) => {
-    const x = 22 + index * (156 / Math.max(1, stops.length - 1));
+    const x = 44 + index * (312 / Math.max(1, stops.length - 1));
     const y = 94 - ((Number(stop.day) || 1) - 1) * 24 + (index % 2) * 10;
     return { x, y, stop };
   });
-  return h('svg', { class: 'route-map', viewBox: '0 0 200 120', role: 'img', 'aria-label': label },
+  return h('svg', { class: 'route-map', viewBox: '0 0 400 120', role: 'img', 'aria-label': label },
     h('polyline', { points: points.map((point) => `${point.x},${point.y}`).join(' '), fill: 'none', stroke: 'currentColor', 'stroke-width': '3', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }),
     ...points.map((point, index) => h('g', {},
       h('circle', { cx: String(point.x), cy: String(point.y), r: '6', fill: guideColor(point.stop.guide) }),

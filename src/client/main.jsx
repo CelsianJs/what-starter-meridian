@@ -66,9 +66,9 @@ function PlannerIsland() {
         </div>
       </aside>
       <section aria-label="Itinerary stops">
-        <div class="panel route-ledger"><p class="eyeline">Current route · schedule order</p><svg class="route-map" viewBox="0 0 200 120" role="img" aria-label="Current itinerary route">
-          <polyline points={() => stops().map((stop,index) => `${22+index*156/Math.max(1,stops().length-1)},${94-(stop.day-1)*24+(index%2)*10}`).join(' ')} fill="none" stroke="currentColor" stroke-width="3" />
-          {() => stops().map((stop,index) => <g><circle cx={22+index*156/Math.max(1,stops().length-1)} cy={94-(stop.day-1)*24+(index%2)*10} r="6" fill={data.guides.find(guide => guide.slug===stop.guide)?.color || '#1f6f92'} /><text x={22+index*156/Math.max(1,stops().length-1)} y={82-(stop.day-1)*24+(index%2)*10} text-anchor="middle">D{stop.day}</text></g>)}
+        <div class="panel route-ledger"><p class="eyeline">Current route · schedule order</p><svg class="route-map" viewBox="0 0 400 120" role="img" aria-label="Current itinerary route">
+          <polyline points={() => stops().map((stop,index) => `${44+index*312/Math.max(1,stops().length-1)},${94-(stop.day-1)*24+(index%2)*10}`).join(' ')} fill="none" stroke="currentColor" stroke-width="3" />
+          {() => stops().map((stop,index) => <g><circle cx={44+index*312/Math.max(1,stops().length-1)} cy={94-(stop.day-1)*24+(index%2)*10} r="6" fill={data.guides.find(guide => guide.slug===stop.guide)?.color || '#1f6f92'} /><text x={44+index*312/Math.max(1,stops().length-1)} y={82-(stop.day-1)*24+(index%2)*10} text-anchor="middle">D{stop.day}</text></g>)}
         </svg></div>
         {() => days().map(([day, dayStops]) => (
           <article class="day-card">

@@ -1,12 +1,20 @@
 # Design
 
+## Modern interface baseline — 2026-10-08
+
+The prior chart-paper background and oversized serif titles made otherwise working routes feel like posters. The interface now uses a consistent sans-serif body and control system, white and quiet blue surfaces, 8px corners, subtle borders and a restrained heading scale. Navigation is plain text with 44px hit areas; primary actions are filled teal and secondary controls are visibly distinct. Destination cards retain their individual color accents.
+
+The same tokens apply to the home, guide, planner, build and unknown-route surfaces. Desktop destination cards begin within the first viewport. On small screens the planner puts actual stops before its longer export/settings panel, while guide notes lead the detail screen. Code remains monospace; ordinary interface labels do not use uppercase letterspacing.
+
+The route graphic still reads actual source stop data. Its point geometry is not replaced by an illustrative mockup. No fonts, photography, dependencies or remote requests were added. System font fallbacks may differ slightly by operating system; the bounded type and layout rules remain the contract.
+
 ## Product-depth refinement — 2026-10-07
 
 Each guide now includes practical, explicitly fictional pace/access notes and a guide-derived local route. Selected guide context is carried by `?guide=slug`, but saved work is not replaced until the visitor explicitly applies that route. Reorder swaps activities between fixed day/time slots; chart/export read the same stop state. Guide context leads on mobile; no-JS pages retain a readable sample itinerary.
 
 ## Source of truth
 - Status: Active
-- Last refreshed: 2026-10-07
+- Last refreshed: 2026-10-08
 - Primary product surfaces: Coastal travel guide index, guide detail pages, itinerary planner, build journal, not-found page.
 - Evidence reviewed: Starter brief; existing What starter static-render pattern from sibling starters; local What/Vura package constraints.
 
@@ -36,10 +44,10 @@ Each guide now includes practical, explicitly fictional pace/access notes and a 
 - Tradeoffs: The planner is intentionally local-only and synthetic; no remote storage keeps the starter portable.
 
 ## Visual language
-- Color: Blue paper, ink navy, fog, buoy red, sea-glass green accents.
-- Typography: Georgia/Charter-like serif for guide texture; narrow uppercase labels for cartographic metadata.
-- Spacing/layout rhythm: Broad ledger grids, route strips, inset panels, shoreline-like rules.
-- Shape/radius/elevation: Low radius, hairline borders, paper shadows, no glossy cards.
+- Color: White, restrained blue surfaces, ink navy and readable teal accents; destination colors remain contextual.
+- Typography: Avenir Next/Segoe UI sans-serif body and controls; 16px body, 14px interface labels, 32–48px page headings. Code alone uses monospace.
+- Spacing/layout rhythm: 8px steps, consistent 20–24px panel padding, compact route ledger and task-first planner.
+- Shape/radius/elevation: 8px corners, subtle borders and minimal hover elevation, no glass or paper effects.
 - Motion: Subtle current-like fades and focus transitions; reduced-motion disables transforms.
 - Imagery/iconography: data-backed inline SVG route lines, compass roses, tide marks; no external assets.
 
@@ -79,7 +87,7 @@ Each guide now includes practical, explicitly fictional pace/access notes and a 
 - Design-token constraints: No remote assets, no paid services, no tracking.
 - Performance constraints: SSG for every guide route and alias; small client bundle.
 - Compatibility constraints: Node 22; client uses browser APIs only behind safe wrappers.
-- Test/screenshot expectations: Desktop, mobile, direct route, 404, storage denial, corrupt storage, reorder and export flows.
+- Test/screenshot expectations: Desktop, mobile, direct route, 404, storage denial, corrupt storage, reorder and export flows. `scripts/style-browser.mjs` checks home/guide/planner/build type bounds, positive heading leading, first-screen destination cards, 44px controls, focus, overflow and runtime errors.
 
 ## Open questions
 - [ ] None for local starter review; live URL validation belongs to root after deployment.
