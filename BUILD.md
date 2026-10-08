@@ -1,12 +1,25 @@
 # Build journal
 
+## Interface consistency — 2026-10-08
+
+Working controls were not enough: the previous heading scale, negative leading, global chart grid and pill styling made the product hard to scan. This pass replaces the consolidated stylesheet rather than stacking new overrides. Body and UI typography use shared variables, and home/detail/planner/build routes now obey the same hierarchy. A compact sample chart supports the trip data instead of dominating it.
+
+```css
+:root {
+  --font: 'Avenir Next', 'Segoe UI Variable', 'Segoe UI', sans-serif;
+  --radius: 8px;
+}
+```
+
+The planner's state, schedule-slot reordering, storage recovery and exported JSON are unchanged. Only responsive composition changes: actual itinerary stops precede the export/settings panel on narrow screens. The no-JS fallback remains readable. The visual regression failed on the old oversized title, then passed on the new home/guide/planner/build output at desktop, mobile and the reference width. Existing reorder/timezone/export, denied/corrupt storage and real404 checks also pass on Node22. This is layout/browser evidence, not a formal accessibility or performance certification.
+
 ## Product-depth patterns — 2026-10-07
 
 `planForGuide(slug)` and `moveStop(items, index, delta)` are pure functions in `src/content.mjs`. Previously, reordering retained activity timestamps while hard-coding day reassignment, which could place 13:10 before 09:40. The corrected swap retains destination slot `day` and `time`: `{ ...items[target], day: items[index].day, time: items[index].time }`. The query parameter selects only a known guide. Existing saved plans win on initial load, and an explicit route button replaces them. The mounted SVG projects current stops through reactive accessors; the static sample chart remains only as a no-JS fallback. Timezone output is labeled as a fixed reference instant, not conversion of undated stop slots. Tests cover each guide plan, slot stability, exported guide ids and storage failure.
 
 Verification: `npm test` runs content/model regressions, production artifact checks, contextual browser flows, desktop/mobile screenshots and the original smoke suite. Screenshot proof is under `.screenshots/`; no external services are required.
 
-Last verified: 2026-10-07.
+Last verified: 2026-10-08.
 
 ## Architecture
 

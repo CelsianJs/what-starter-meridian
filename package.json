@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "node scripts/clean.mjs && vite build --config vite.client.config.js && node scripts/build.mjs && node scripts/check.mjs",
-    "test": "node scripts/product-depth.test.mjs && npm run build && node scripts/product-browser.mjs && node scripts/smoke.mjs",
+    "test": "node scripts/product-depth.test.mjs && npm run build && node scripts/product-browser.mjs && node scripts/smoke.mjs && node scripts/style-browser.mjs",
+    "test:style": "node scripts/style-browser.mjs",
     "preview": "node scripts/serve-static.mjs"
   },
   "dependencies": {
